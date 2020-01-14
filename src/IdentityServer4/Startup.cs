@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityServer4
 {
@@ -76,6 +77,30 @@ namespace IdentityServer4
                     // set the redirect URI to http://localhost:5000/signin-google
                     options.ClientId = "copy client ID from Google here";
                     options.ClientSecret = "copy client secret from Google here";
+                })
+                .AddOpenIdConnect("aad", "Sign-in with Azure AD", options =>
+                {
+                    options.Authority = "https://login.windows.net/applicationid"; //directory client id make configurable
+                    options.ClientId = "client id";  //application client id make configurable
+
+                    //options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    //options.SignOutScheme = IdentityServerConstants.SignoutScheme;
+
+                    options.ResponseType = "id_token";
+                    options.CallbackPath = "/signin-oidc";
+                    //options.SignedOutCallbackPath = "/signout-callback-aad";
+                    //options.RemoteSignOutPath = "/signout-aad";
+
+                    options.TokenValidationParameters = new TokenValidationParameters { ValidateIssuer = false };
+
+                    //options.TokenValidationParameters = new TokenValidationParameters
+                    //{
+                    //    //ValidateIssuer = false,
+                    //    //ValidAudience = "165b99fd-195f-4d93-a111-3e679246e6a9",
+
+                    //    NameClaimType = "name",
+                    //    RoleClaimType = "role"
+                    //};
                 });
         }
 

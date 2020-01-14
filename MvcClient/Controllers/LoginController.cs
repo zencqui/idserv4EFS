@@ -20,7 +20,11 @@ namespace MvcClient.Controllers
 
         public IActionResult Logout()
         {
-            return View();
+            return SignOut(new AuthenticationProperties
+                {
+                    RedirectUri = "Home/Index"
+                }, OpenIdConnectDefaults.AuthenticationScheme,
+                Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
 }
